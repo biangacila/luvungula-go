@@ -1,4 +1,4 @@
-module "github.com/biangacila/luvungula-go"
+module github.com/biangacila/luvungula-go
 
 go 1.12
 
