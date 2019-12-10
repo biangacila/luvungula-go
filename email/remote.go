@@ -1,4 +1,4 @@
-package send
+package email
 
 import (
 	"crypto/tls"
@@ -25,12 +25,14 @@ type EmailHost struct {
 	Attaches     string
 	AttachedType string
 
-	SMTP_PORT string
-	SMTP_SERVER string
+	SMTP_PORT     string
+	SMTP_SERVER   string
 	SMTP_USERNAME string
 	SMTP_PASSWORD string
 }
+
 const DIR_TEMP_ATTACHED_DOWNLOAD = "downloads"
+
 func (obj *EmailHost) Send() {
 	port, _ := strconv.Atoi(obj.SMTP_PORT)
 	d := mail.NewDialer(obj.SMTP_SERVER, port, obj.SMTP_USERNAME, obj.SMTP_PASSWORD)

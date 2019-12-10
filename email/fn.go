@@ -1,4 +1,4 @@
-package send
+package email
 
 import (
 	"bytes"
@@ -722,4 +722,3 @@ func LoadPublicHoliday1() map[string]Holiday {
 	PublicHoliday["12-26"] = Holiday{Day: "Thursday", Date: "December 26", HDay: "Day of Good Will"}
 	return PublicHoliday
 }
-
