@@ -1,3 +1,3 @@
-module github.com/biangacila/luvungula-go/dropbox
+module luvungula-go/dropbox
 
 go 1.12
