@@ -13,7 +13,17 @@ var Cluster *gocql.ClusterConfig
 var CusterHost1 string
 var CusterHost2 string
 var CusterHost3 string
+
 func init() {
+	if CusterHost1 == "" {
+		CusterHost1 = "voip.easipath.com"
+	}
+	if CusterHost2 == "" {
+		CusterHost2 = "voip2.easipath.com"
+	}
+	if CusterHost3 == "" {
+		CusterHost3 = "joseph.easipath.com"
+	}
 	cluster := gocql.NewCluster(CusterHost1, CusterHost2, CusterHost3)
 	cluster.PoolConfig.HostSelectionPolicy = gocql.TokenAwareHostPolicy(gocql.RoundRobinHostPolicy())
 	cluster.Compressor = &gocql.SnappyCompressor{}
@@ -30,8 +40,8 @@ func init() {
 	ConnCass = session
 }
 
-func setup_cluster() *gocql.ClusterConfig {
-	cluster := gocql.NewCluster(CusterHost1, CusterHost2, CusterHost3)
+func setup_cluster(arrayHost []string) *gocql.ClusterConfig {
+	cluster := gocql.NewCluster(arrayHost...)
 	cluster.PoolConfig.HostSelectionPolicy = gocql.TokenAwareHostPolicy(gocql.RoundRobinHostPolicy())
 	cluster.Compressor = &gocql.SnappyCompressor{}
 	cluster.RetryPolicy = &gocql.ExponentialBackoffRetryPolicy{NumRetries: 3}
@@ -43,9 +53,12 @@ func setup_cluster() *gocql.ClusterConfig {
 	Cluster = cluster
 	return cluster
 }
-func RunQueryCass(qry string) string {
+func RunQueryCass(qry string, arrayHost []string) string {
 	if Cluster == nil {
-		setup_cluster()
+		if len(arrayHost) == 0 {
+			arrayHost = []string{"voip.easipath.com", "voip2.easipath.com", "joseph.easipath.com"}
+		}
+		setup_cluster(arrayHost)
 	}
 	session, _ := Cluster.CreateSession()
 	defer session.Close()
