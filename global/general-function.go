@@ -330,6 +330,45 @@ func SecureRequestHTTPS(myUrl string) string {
 	return string(body)
 }
 
+func httpContentPost2(myUrl string, dataIn interface{}) string {
+
+	var mymap = make(map[string]interface{})
+
+	b, _ := json.Marshal(dataIn)
+	json.Unmarshal(b, &mymap)
+
+	data := url.Values{}
+	for key, val := range mymap {
+		strVal := fmt.Sprintf("%v", val)
+		data.Set(key, strVal)
+	}
+
+	req, err := http.NewRequest("POST", myUrl, bytes.NewBufferString(data.Encode()))
+	if err != nil {
+		return "{}"
+	}
+	//req.Header.Add("Authorization", "auth_token=\"XXXXXXX\"")
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
+	//req.Header.Set("Connection", "Keep-Alive")
+
+	var client http.Client
+	resp, err := client.Do(req)
+
+	if err != nil {
+		return "{}"
+	}
+	defer resp.Body.Close()
+
+	dataOut, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return "{}"
+	}
+
+	return string(dataOut)
+
+}
 func httpContentPost(myUrl string, mymap map[string]interface{}) string {
 
 	data := url.Values{}
