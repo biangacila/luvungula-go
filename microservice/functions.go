@@ -124,3 +124,28 @@ func MicroServiceSaveToEvents(topic, action string, record interface{}, dbHost, 
 	fmt.Println("::::->", res)
 	return res
 }
+
+func SendRequestMidwareKafka(topic string, action string, payload interface{}, postUlr string) string {
+
+	type RequestSend struct {
+		Topic   string
+		Payload struct {
+			Action  string
+			Payload interface{}
+		}
+	}
+
+	// let build the data to be sent to midware kafka microservice
+	var req RequestSend
+	req.Topic = topic
+	req.Payload.Action = action
+	req.Payload.Payload = payload
+
+	// convert build data into map to be sent
+	postData := ConvertObjectToMapInterface(req)
+
+	// send to message broker using supplied url
+	res := global.HttpContentPost(postUlr, postData)
+
+	return res
+}
